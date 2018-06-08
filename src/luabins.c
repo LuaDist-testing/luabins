@@ -7,6 +7,7 @@
 #include "luaheaders.h"
 
 #include "luabins.h"
+#include "saveload.h"
 
 /*
 * On success returns data string.
@@ -66,9 +67,34 @@ extern "C" {
 
 LUALIB_API int luaopen_luabins(lua_State * L)
 {
+  /*
+  * Compile-time checks for size constants.
+  * Consult PORTABILITY WARNING in saveload.h before changing constants.
+  */
+
+  /* int is too small on your platform, fix LUABINS_LINT */
+  luabins_static_assert(sizeof(int) >= LUABINS_LINT);
+  /* size_t is too small on your platform, fix LUABINS_LSIZET */
+  luabins_static_assert(sizeof(size_t) >= LUABINS_LSIZET);
+  /* unexpected lua_Number size, fix LUABINS_LNUMBER */
+  luabins_static_assert(sizeof(lua_Number) == LUABINS_LNUMBER);
+
+  /*
+  * Register module
+  */
   luaL_register(L, "luabins", R);
+
+  /*
+  * Register module information
+  */
   lua_pushliteral(L, LUABINS_VERSION);
-  lua_setfield(L, -2, "VERSION");
+  lua_setfield(L, -2, "_VERSION");
+
+  lua_pushliteral(L, LUABINS_COPYRIGHT);
+  lua_setfield(L, -2, "_COPYRIGHT");
+
+  lua_pushliteral(L, LUABINS_DESCRIPTION);
+  lua_setfield(L, -2, "_DESCRIPTION");
 
   return 1;
 }

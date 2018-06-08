@@ -4,8 +4,8 @@
 * See copyright notice in luabins.h
 */
 
-#ifndef LUABINS_SAVELOAD_H_
-#define LUABINS_SAVELOAD_H_
+#ifndef LUABINS_SAVELOAD_H_INCLUDED_
+#define LUABINS_SAVELOAD_H_INCLUDED_
 
 /* Find minimum of two values */
 #define luabins_min(a, b) \
@@ -18,6 +18,20 @@
 /* Find minimum of three values */
 #define luabins_min3(a, b, c) \
   ( ((a) < (b)) ? luabins_min((a), (c)) : luabins_min((b), (c)) )
+
+/* Preprocessor concatenation */
+#define LUABINS_CAT(a, b) a##b
+
+/* Static assert helper macro */
+#define luabins_static_assert_line(pred, line) \
+  typedef char LUABINS_CAT( \
+      static_assertion_failed_at_line_, \
+      line \
+    )[2 * !!(pred) - 1]
+
+/* Static (compile-time) assert */
+#define luabins_static_assert(pred) \
+  luabins_static_assert_line(pred, __LINE__)
 
 /* Internal error codes */
 #define LUABINS_ESUCCESS (0)
@@ -44,10 +58,12 @@
 * for both code that does the save and code that does the load.
 * Also these constants must be actual or code below would break.
 * Beware of endianness and lua_Number actual type as well.
+* Note also that luabins does not check for overflow on save,
+* if your integer does not fit, it would be truncated.
 */
-#define LUABINS_LINT      (sizeof(int))
-#define LUABINS_LSIZET    (sizeof(size_t))
-#define LUABINS_LNUMBER   (sizeof(lua_Number))
+#define LUABINS_LINT      (4)
+#define LUABINS_LSIZET    (4)
+#define LUABINS_LNUMBER   (8)
 
 /*
 * Derived lengths
@@ -95,4 +111,4 @@
       : (total_size * (LUABINS_LTYPEBYTE + LUABINS_LTYPEBYTE)) \
   )
 
-#endif /* LUABINS_SAVELOAD_H_ */
+#endif /* LUABINS_SAVELOAD_H_INCLUDED_ */

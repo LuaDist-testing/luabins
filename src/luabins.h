@@ -4,10 +4,12 @@
 * See copyright notice at the end of this file.
 */
 
-#ifndef LUABINS_H_
-#define LUABINS_H_
+#ifndef LUABINS_H_INCLUDED_
+#define LUABINS_H_INCLUDED_
 
-#define LUABINS_VERSION "0.2"
+#define LUABINS_VERSION     "Luabins 0.3"
+#define LUABINS_COPYRIGHT   "Copyright (C) 2009-2010, Luabins authors"
+#define LUABINS_DESCRIPTION "Trivial Lua Binary Serialization Library"
 
 /* Define LUABINS_LUABUILTASCPP if your Lua is built as C++ */
 
@@ -64,4 +66,4 @@ int luabins_load(
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
-#endif /* LUABINS_H_ */
+#endif /* LUABINS_H_INCLUDED_ */

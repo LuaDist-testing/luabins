@@ -199,6 +199,22 @@ local check_fail_load = function(msg, v)
 --  print("/check_fail_load")
 end
 
+print("===== BEGIN LARGE DATA OK =====")
+
+-- Based on actual bug.
+-- This dataset triggered Lua C data stack overflow.
+-- (Note that bug is not triggered if check_ok is used)
+-- Update data with
+-- $ lua etc/toluabins.lua test/large_data.lua>test/large_data.luabins
+-- WARNING: Keep this test above other tests, so Lua stack is small.
+assert(
+    luabins.load(
+        assert(io.open("test/large_data.luabins", "r"):read("*a"))
+      )
+  )
+
+print("===== LARGE DATA OK =====")
+
 -- ----------------------------------------------------------------------------
 -- Basic tests
 -- ----------------------------------------------------------------------------
@@ -518,7 +534,7 @@ do
       )
 
     check_fail_load(
-        "can't load: corrupt data, bad size",
+        "can't load: corrupt data",
         saved:sub(1, #saved - 1)
       )
 
@@ -564,7 +580,7 @@ do
       )
 
     check_fail_load(
-        "can't load: corrupt data, bad size",
+        "can't load: corrupt data",
         saved:sub(1, #saved - 1)
       )
 
